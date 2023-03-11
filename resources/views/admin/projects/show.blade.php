@@ -9,6 +9,7 @@
         <div class="card-body">
             <h5 class="card-title">{{ $project->title }}</h5>
             <p class="card-text"> {{$project->description }}</p>
+            <p class="card-text">{{$project->type?->name}}</p>
             <a href="{{ $project->link_project}}" class="btn btn-primary">Vedi in GitHub</a>
             <a href="{{route('admin.projects.edit', $project->id)}}" class="btn btn-warning text-white">Modifica</a>
             <a href="{{route('admin.projects.index')}}" class="btn btn-secondary my-2">Indietro</a>

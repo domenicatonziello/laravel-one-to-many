@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -25,7 +26,8 @@ class ProjectController extends Controller
     public function create()
     {
         $project = new Project();
-        return view('admin.projects.create', compact('project'));
+        $types = Type::all();
+        return view('admin.projects.create', compact('project', 'types'));
     }
 
     /**
@@ -37,13 +39,15 @@ class ProjectController extends Controller
             'title' => 'required|string|unique:projects|max:50',
             'description' => 'string|nullable',
             'image' => 'image|nullable',
-            'link_project' => 'required|string|unique:projects'
+            'link_project' => 'required|string|unique:projects',
+            'type_id' => 'nullable|exists:types,id'
         ], [
             'title.required' => 'il titolo è obbligatorio',
             'title.max' => 'il titolo deve avere massimo 50 caratteri',
             'title.unique' => "Esiste già un progetto $request->title ",
             'link_project.required' => 'Il link per il progetto è obbligatorio',
-            'link_project.unique' => 'Link già esistente'
+            'link_project.unique' => 'Link già esistente',
+            'type_id' => 'Il tipo selezionato non è valido'
         ]);
         $data = $request->all();
         $project = new Project();
@@ -75,7 +79,8 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        return view('admin.projects.edit', compact('project'));
+        $types = Type::all();
+        return view('admin.projects.edit', compact('project', 'types'));
     }
 
     /**
@@ -87,13 +92,15 @@ class ProjectController extends Controller
             'title' => ['required', 'string', Rule::unique('projects')->ignore($project->id), 'max:50'],
             'description' => 'string|nullable',
             'image' => 'image|nullable',
-            'link_project' => ['required', 'string', Rule::unique('projects')->ignore($project->id)]
+            'link_project' => ['required', 'string', Rule::unique('projects')->ignore($project->id)],
+            'type_id' => 'nullable|exists:types,id'
         ], [
             'title.required' => 'il titolo è obbligatorio',
             'title.max' => 'il titolo deve avere massimo 50 caratteri',
             'title.unique' => "Esiste già un progetto $request->title ",
             'link_project.required' => 'Il link per il progetto è obbligatorio',
-            'link_project.unique' => 'Link già esistente'
+            'link_project.unique' => 'Link già esistente',
+            'type_id' => 'Il tipo selezionato non è valido'
         ]);
         $data = $request->all();
 
