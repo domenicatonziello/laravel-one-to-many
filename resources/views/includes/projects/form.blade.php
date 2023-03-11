@@ -8,10 +8,23 @@
     @csrf
     <div class="row my-5">
         {{-- title --}}
-        <div class="col-6 mb-4">
+        <div class="col-3 mb-4">
             <label for="title" class="form-label">Titolo</label>
             <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" maxlength="50" required value="{{ old('title', $project->title) }}" placeholder="Inserisci il titolo del tuo progetto">
             @error('title')
+                <div class="invalid-feedback"> {{$message}} </div>
+            @enderror
+        </div>
+        {{-- type --}}
+        <div class="col-3 mb-4">
+            <label for="type" class="form-label">Tipo</label>
+            <select class="form-select @error('type_id') is-invalid @enderror" name="type_id" id="type">
+                <option>--</option>
+                @foreach ($types as $type)
+                    <option @if(old('type_id',$project->type_id) == $type->id) selected @endif value="{{ $type->id }}">{{ $type->name }}</option>
+                @endforeach
+            </select>
+            @error('type_id')
                 <div class="invalid-feedback"> {{$message}} </div>
             @enderror
         </div>
